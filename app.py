@@ -9,7 +9,7 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 🎨 ÖZEL TASARIM (CSS) ---
+# --- 🎨 ÖZEL TASARIM (CSS - DÜZELTİLMİŞ) ---
 st.markdown("""
     <style>
     /* Arka plan renk geçişi */
@@ -47,24 +47,32 @@ st.markdown("""
         transform: scale(1.02);
     }
     
-    /* Radyo butonları */
-    .stRadio label {
-        font-size: 24px !important;
-        font-weight: bold;
-        color: #4B0082;
-        background-color: rgba(255,255,255,0.8);
-        padding: 15px;
-        border-radius: 15px;
-        margin-bottom: 8px;
-        border: 2px solid #ddd;
-        display: block;
-        cursor: pointer;
-    }
-    .stRadio label:hover {
-        background-color: #e6e6fa;
-        border-color: #9370db;
+    /* --- RADYO BUTONLARI (TELEFON İÇİN DÜZELTME BURADA) --- */
+    /* Kutunun kendisi */
+    .stRadio div[role='radiogroup'] > label {
+        background-color: rgba(255,255,255,0.9) !important;
+        padding: 15px !important;
+        border-radius: 15px !important;
+        margin-bottom: 10px !important;
+        border: 2px solid #ddd !important;
+        display: block !important;
+        cursor: pointer !important;
+        transition: all 0.3s !important;
     }
     
+    /* Kutunun içindeki YAZI RENGİNİ ZORLA MOR YAP */
+    .stRadio div[role='radiogroup'] label p {
+        font-size: 24px !important;
+        font-weight: bold !important;
+        color: #4B0082 !important; /* İşte sihirli dokunuş burası */
+    }
+    
+    /* Seçilen şıkkın kenarını renklendir */
+    .stRadio div[role='radiogroup'] > label:hover {
+        background-color: #e6e6fa !important;
+        border-color: #9370db !important;
+    }
+
     /* Başlıklar */
     h1 {
         text-align: center;
@@ -91,12 +99,9 @@ def ses_cal(durum):
     st.markdown(audio_code, unsafe_allow_html=True)
 
 # --- HAFIZA (SESSION STATE) ---
-# Her oyun için AYRI puan tutuyoruz
 if 'score_math' not in st.session_state: st.session_state.score_math = 0
 if 'score_eng' not in st.session_state: st.session_state.score_eng = 0
 if 'score_zit' not in st.session_state: st.session_state.score_zit = 0
-
-# Sorular için hafıza
 if 'math_q' not in st.session_state:
     st.session_state.math_q = {'n1': random.randint(1, 10), 'n2': random.randint(1, 10)}
 if 'eng_index' not in st.session_state:
@@ -110,8 +115,7 @@ st.sidebar.title("Menü 🍭")
 st.sidebar.info("Hadi Roza, Her Bölümü Tamamla!") 
 page = st.sidebar.radio("Oyun Seç:", ["🧮 Çarpım Canavarı", "🇬🇧 İngilizce Kartları", "🌗 Zıt Anlamlar"])
 
-# --- PUAN MANTIĞI AYARLAMA ---
-# Hangi sayfadaysak o sayfanın puanını 'aktif puan' olarak belirliyoruz
+# Puan Mantığı
 if page == "🧮 Çarpım Canavarı":
     current_score = st.session_state.score_math
     score_key = 'score_math'
@@ -120,13 +124,12 @@ elif page == "🇬🇧 İngilizce Kartları":
     current_score = st.session_state.score_eng
     score_key = 'score_eng'
     game_name = "İngilizce"
-else: # Zıt Anlamlar
+else: 
     current_score = st.session_state.score_zit
     score_key = 'score_zit'
     game_name = "Zıt Anlamlar"
 
 st.sidebar.write("---")
-# Menüde sadece o oyunun puanını göster
 st.sidebar.markdown(f"### 🏆 {game_name}: **{current_score}**")
 st.sidebar.write("Hedef: 100 Puan! 🎯")
 
@@ -136,13 +139,13 @@ if st.sidebar.button("Tüm Puanları Sıfırla 🔄"):
     st.session_state.score_zit = 0
     st.rerun()
 
-# --- İLERLEME ÇUBUĞU (Sayfaya özel) ---
+# İlerleme Çubuğu
 progress_val = min(current_score, 100) 
 st.write(f"**{game_name} Hedefi: %{progress_val}**")
 st.progress(progress_val / 100)
 
 # ========================================================
-# 🏆 100 PUAN KAZANMA EKRANI (BÖLÜME ÖZEL)
+# 🏆 100 PUAN KUTLAMASI
 # ========================================================
 if current_score >= 100:
     ses_cal("kazandi")
@@ -154,7 +157,7 @@ if current_score >= 100:
         <h1 style='font-size: 80px;'>🏆</h1>
         <h1 style='color: #d32f2f; font-size: 40px;'>TEBRİKLER ROZA!</h1>
         <h2 style='color: #333;'>{game_name} BÖLÜMÜNÜ BİTİRDİN! 🌟</h2>
-        <p style='font-size: 20px;'>Harikasın! Şimdi menüden başka bir oyuna geçip onu da kazanabilirsin.</p>
+        <p style='font-size: 20px;'>Harikasın! Şimdi menüden başka bir oyuna geçebilirsin.</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -164,8 +167,7 @@ if current_score >= 100:
     if st.button(f"{game_name} Puanını Sıfırla ve Oyna 🔄"):
         st.session_state[score_key] = 0
         st.rerun()
-        
-    st.stop() # Oyunu durdur, sadece kutlamayı göster
+    st.stop()
 
 # ========================================================
 # 1. OYUN: ÇARPIM CANAVARI
@@ -203,7 +205,6 @@ if page == "🧮 Çarpım Canavarı":
         elif user_ans == correct_answer:
             ses_cal("dogru")
             st.markdown("<h1 style='text-align: center; color: #28a745; font-size: 35px;'>🌟 HARİKASIN KIZIM ROZA! 🌟</h1>", unsafe_allow_html=True)
-            # Sadece matematik puanını artır
             st.session_state.score_math += 10
             time.sleep(1.5)
             st.session_state.math_q = {'n1': random.randint(1, 10), 'n2': random.randint(1, 10)}
@@ -211,7 +212,7 @@ if page == "🧮 Çarpım Canavarı":
             st.rerun()
         else:
             ses_cal("yanlis")
-            st.markdown("<h1 style='text-align: center; color: #FF4B4B; font-size: 35px;'>🐢 Rezill Roza!! 🐢</h1>", unsafe_allow_html=True)
+            st.markdown("<h1 style='text-align: center; color: #FF4B4B; font-size: 35px;'>🐢 Yapma Roza!! 🐢</h1>", unsafe_allow_html=True)
 
 # ========================================================
 # 2. OYUN: İNGİLİZCE KARTLARI
@@ -272,7 +273,6 @@ elif page == "🇬🇧 İngilizce Kartları":
         elif cevap == correct_tr:
             ses_cal("dogru")
             st.markdown("<h1 style='text-align: center; color: #28a745; font-size: 35px;'>🌟 HARİKASIN KIZIM ROZA! 🌟</h1>", unsafe_allow_html=True)
-            # Sadece İngilizce puanını artır
             st.session_state.score_eng += 10
             time.sleep(1.5)
             st.session_state.eng_index += 1
@@ -280,7 +280,7 @@ elif page == "🇬🇧 İngilizce Kartları":
             st.rerun()
         else:
             ses_cal("yanlis")
-            st.markdown("<h1 style='text-align: center; color: #FF4B4B; font-size: 35px;'>🐢 Rezill Roza!! 🐢</h1>", unsafe_allow_html=True)
+            st.markdown("<h1 style='text-align: center; color: #FF4B4B; font-size: 35px;'>🐢 Yapma Roza!! 🐢</h1>", unsafe_allow_html=True)
 
 # ========================================================
 # 3. OYUN: ZIT ANLAMLAR
@@ -335,7 +335,6 @@ elif page == "🌗 Zıt Anlamlar":
         elif cevap_zit == dogru_cevap:
             ses_cal("dogru")
             st.markdown("<h1 style='text-align: center; color: #28a745; font-size: 35px;'>🌟 HARİKASIN KIZIM ROZA! 🌟</h1>", unsafe_allow_html=True)
-            # Sadece Zıt Anlam puanını artır
             st.session_state.score_zit += 10
             time.sleep(1.5)
             st.session_state.zit_soru = random.choice(list(zit_words.keys()))
@@ -343,4 +342,4 @@ elif page == "🌗 Zıt Anlamlar":
             st.rerun()
         else:
             ses_cal("yanlis")
-            st.markdown("<h1 style='text-align: center; color: #FF4B4B; font-size: 35px;'>🐢 Rezill Roza!! 🐢</h1>", unsafe_allow_html=True)
+            st.markdown("<h1 style='text-align: center; color: #FF4B4B; font-size: 35px;'>🐢 Yapma Roza!! 🐢</h1>", unsafe_allow_html=True)
