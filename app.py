@@ -225,7 +225,7 @@ if page == "🧮 Çarpım Canavarı":
             st.rerun()
         else:
             ses_cal("yanlis")
-            st.markdown("<h2 style='color: #FF4B4B !important;'>🐢 Yapma Roza!! 🐢</h2>", unsafe_allow_html=True)
+            st.markdown("<h2 style='color: #FF4B4B !important;'>🐢 Rezill Roza!! 🐢</h2>", unsafe_allow_html=True)
 
 # ========================================================
 # 2. OYUN: İNGİLİZCE KARTLARI
@@ -256,4 +256,97 @@ elif page == "🇬🇧 İngilizce Kartları":
         random.shuffle(words)
     
     current_word = words[st.session_state.eng_index]
-    correct_
+    correct_tr = current_word['tr']
+
+    st.markdown(f"""
+    <div style="background-color: #E0F7FA; padding: 10px; border-radius: 15px; border: 3px solid #00BCD4; text-align:center; margin-bottom: 10px;">
+        <h3 style='color: #006064 !important; margin:0; font-size: 1.2rem !important;'>Bu ne demek?</h3>
+        <h1 style='color: #0097A7 !important; font-size: 40px !important; margin-top:5px;'>{current_word['eng']}</h1>
+    </div>
+    """, unsafe_allow_html=True)
+
+    if 'eng_options' not in st.session_state:
+        opts = [correct_tr]
+        tum_turkce = [w['tr'] for w in words]
+        while len(opts) < 3:
+            yanlis = random.choice(tum_turkce)
+            if yanlis != correct_tr and yanlis not in opts:
+                opts.append(yanlis)
+        random.shuffle(opts)
+        st.session_state.eng_options = opts
+
+    cevap = st.radio("", st.session_state.eng_options, index=None, key="eng_radio")
+
+    if st.button("Cevabı Gönder 🚀", key="btn_eng"):
+        if cevap is None:
+            st.warning("Seçim yapmalısın!")
+        elif cevap == correct_tr:
+            ses_cal("dogru")
+            st.markdown("<h2 style='color: #28a745 !important;'>🌟 AFERİN ROZA! 🌟</h2>", unsafe_allow_html=True)
+            st.session_state.score_eng += 10
+            time.sleep(1.0)
+            st.session_state.eng_index += 1
+            if 'eng_options' in st.session_state: del st.session_state.eng_options
+            st.rerun()
+        else:
+            ses_cal("yanlis")
+            st.markdown("<h2 style='color: #FF4B4B !important;'>🐢 Rezill Roza!! 🐢</h2>", unsafe_allow_html=True)
+
+# ========================================================
+# 3. OYUN: ZIT ANLAMLAR
+# ========================================================
+elif page == "🌗 Zıt Anlamlar":
+    st.title("🌗 Zıt Anlamlar")
+
+    zit_words = {
+        "SİYAH ⚫": "BEYAZ", "UZUN 🦒": "KISA", "ZENGİN 💰": "FAKİR",
+        "ACI 🌶️": "TATLI", "BÜYÜK 🐘": "KÜÇÜK", "AĞIR 🏋️": "HAFİF",
+        "GECE 🌑": "GÜNDÜZ", "SICAK 🔥": "SOĞUK", "YAVAŞ 🐢": "HIZLI",
+        "GÜZEL 🌸": "ÇİRKİN", "VAR ✅": "YOK", "AÇIK 🔓": "KAPALI",
+        "TEMİZ ✨": "KİRLİ", "GENÇ 👶": "YAŞLI", "DOLU 🥛": "BOŞ",
+        "İNCE 🧵": "KALIN", "ÖN ⏩": "ARKA", "İÇERİ 🏠": "DIŞARI",
+        "YENİ ✨": "ESKİ", "SERT 🪨": "YUMUŞAK", "KOLAY 👍": "ZOR",
+        "SABAH ☀️": "AKŞAM", "YAZ 🏖️": "KIŞ", "DOĞRU ✅": "YANLIŞ",
+        "İYİ 😇": "KÖTÜ", "ISLAK 💧": "KURU", "YUKARI ⬆️": "AŞAĞI",
+        "SAĞ ➡️": "SOL", "GÜLMEK 😂": "AĞLAMAK"
+    }
+
+    if st.session_state.zit_soru == "" or st.session_state.zit_soru not in zit_words:
+        st.session_state.zit_soru = random.choice(list(zit_words.keys()))
+
+    soru = st.session_state.zit_soru
+    dogru_cevap = zit_words[soru]
+
+    st.markdown(f"""
+    <div style="background-color: #F3E5F5; padding: 10px; border-radius: 15px; border: 3px solid #9C27B0; text-align:center; margin-bottom: 10px;">
+        <h3 style='color: #6A1B9A !important; margin:0; font-size: 1.2rem !important;'>Zıttı nedir?</h3>
+        <h1 style='color: #8E24AA !important; font-size: 40px !important; margin-top:5px;'>{soru}</h1>
+    </div>
+    """, unsafe_allow_html=True)
+
+    if 'zit_options' not in st.session_state:
+        opts = [dogru_cevap]
+        tum_cevaplar = list(zit_words.values())
+        while len(opts) < 3:
+            yanlis = random.choice(tum_cevaplar)
+            if yanlis != dogru_cevap and yanlis not in opts:
+                opts.append(yanlis)
+        random.shuffle(opts)
+        st.session_state.zit_options = opts
+
+    cevap_zit = st.radio("", st.session_state.zit_options, index=None, key="zit_radio")
+
+    if st.button("Kontrol Et 🎯", key="btn_zit"):
+        if cevap_zit is None:
+            st.warning("Seçim yapmalısın!")
+        elif cevap_zit == dogru_cevap:
+            ses_cal("dogru")
+            st.markdown("<h2 style='color: #28a745 !important;'>🌟 AFERİN ROZA! 🌟</h2>", unsafe_allow_html=True)
+            st.session_state.score_zit += 10
+            time.sleep(1.0)
+            st.session_state.zit_soru = random.choice(list(zit_words.keys()))
+            if 'zit_options' in st.session_state: del st.session_state.zit_options
+            st.rerun()
+        else:
+            ses_cal("yanlis")
+            st.markdown("<h2 style='color: #FF4B4B !important;'>🐢 Rezill Roza!! 🐢</h2>", unsafe_allow_html=True)
