@@ -6,82 +6,97 @@ import time
 st.set_page_config(
     page_title="Roza'nın Süper Dünyası",
     page_icon="🦄",
-    layout="centered"
+    layout="centered" # Telefonda ortalı durması için en iyisi budur
 )
 
-# --- 🎨 ÖZEL TASARIM (TELEFON İÇİN GÜÇLENDİRİLMİŞ CSS) ---
+# --- 🎨 ÖZEL MOBİL UYUMLU TASARIM (CSS) ---
 st.markdown("""
     <style>
-    /* Arka plan */
+    /* 1. EKRAN BOŞLUKLARINI YOK ETME (EN ÖNEMLİ KISIM) */
+    .block-container {
+        padding-top: 1rem !important; /* Üst boşluğu azalttık */
+        padding-bottom: 0rem !important;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+    
+    /* 2. ARKA PLAN */
     .stApp {
         background-image: linear-gradient(to top, #dfe9f3 0%, white 100%);
     }
     
-    /* Yan menü */
+    /* 3. YAN MENÜ */
     [data-testid="stSidebar"] {
         background-color: #fff0f5;
         border-right: 5px solid #ff69b4;
     }
     
-    /* BAŞLIKLARI ZORLA RENKLİ YAP (Görünmeme sorununu çözer) */
+    /* 4. BAŞLIKLAR (Telefona sığması için biraz küçülttük) */
     h1 {
         color: #C71585 !important;
         text-align: center;
         font-family: 'Comic Sans MS', cursive;
-        text-shadow: 2px 2px white;
+        text-shadow: 1px 1px white;
+        font-size: 2.5rem !important; /* Mobilde taşmasın diye boyut ayarı */
     }
     h2, h3 {
         color: #6A1B9A !important;
         text-align: center;
+        font-size: 1.5rem !important;
     }
     p {
         color: #333333 !important;
+        font-size: 1.1rem !important;
     }
 
-    /* İlerleme çubuğu */
+    /* 5. İLERLEME ÇUBUĞU */
     .stProgress > div > div > div > div {
         background-color: #00CC66;
-        height: 20px;
+        height: 15px; /* Biraz incelttik */
         border-radius: 10px;
     }
     
-    /* Buton tasarımı */
+    /* 6. BUTONLAR (Daha kompakt) */
     .stButton>button {
         background-color: #FF4B4B;
         color: white;
-        border-radius: 20px;
-        font-size: 20px;
-        padding: 10px 24px;
+        border-radius: 15px;
+        font-size: 18px;
+        padding: 8px 10px;
         border: 2px solid white;
         box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-        transition: 0.3s;
         width: 100%;
+        margin-top: 10px;
     }
     
-    /* --- RADYO BUTONLARI (TELEFON İÇİN DÜZELTME) --- */
-    /* Kutunun kendisi */
+    /* 7. ŞIKLAR (KUTULAR) - DAHA AZ YER KAPLASIN */
     .stRadio div[role='radiogroup'] > label {
-        background-color: rgba(255,255,255,0.95) !important; /* Arka planı daha opak yaptık */
-        padding: 15px !important;
-        border-radius: 15px !important;
-        margin-bottom: 10px !important;
+        background-color: rgba(255,255,255,0.95) !important;
+        padding: 10px !important; /* Boşluğu azalttık */
+        border-radius: 12px !important;
+        margin-bottom: 6px !important; /* Aralarındaki mesafeyi azalttık */
         border: 2px solid #ddd !important;
         display: block !important;
         cursor: pointer !important;
     }
     
-    /* Şıkların yazı rengini ZORLA KOYU YAP */
+    /* Şıkların yazı rengi */
     .stRadio div[role='radiogroup'] label p {
-        font-size: 24px !important;
+        font-size: 20px !important; /* Mobilde çok büyük olmasın */
         font-weight: bold !important;
         color: #4B0082 !important;
     }
     
-    /* Seçilen şıkkın kenarını renklendir */
+    /* Seçilen şık */
     .stRadio div[role='radiogroup'] > label:hover {
         background-color: #e6e6fa !important;
         border-color: #9370db !important;
     }
+    
+    /* Streamlit'in kendi menüsünü (Hamburger) gizleyelim, yer açılsın */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
     </style>
     """, unsafe_allow_html=True)
 
@@ -113,9 +128,9 @@ if 'zit_soru' not in st.session_state:
     st.session_state.zit_soru = ""
 
 # --- YAN MENÜ ---
-st.sidebar.image("https://cdn-icons-png.flaticon.com/512/477/477163.png", width=120)
+st.sidebar.image("https://cdn-icons-png.flaticon.com/512/477/477163.png", width=100)
 st.sidebar.title("Menü 🍭")
-st.sidebar.info("Hadi Roza, Her Bölümü Tamamla!") 
+st.sidebar.info("Hadi Roza!") 
 page = st.sidebar.radio("Oyun Seç:", ["🧮 Çarpım Canavarı", "🇬🇧 İngilizce Kartları", "🌗 Zıt Anlamlar"])
 
 # Puan Mantığı
@@ -134,9 +149,8 @@ else:
 
 st.sidebar.write("---")
 st.sidebar.markdown(f"### 🏆 {game_name}: **{current_score}**")
-st.sidebar.write("Hedef: 100 Puan! 🎯")
 
-if st.sidebar.button("Tüm Puanları Sıfırla 🔄"):
+if st.sidebar.button("Sıfırla 🔄"):
     st.session_state.score_math = 0
     st.session_state.score_eng = 0
     st.session_state.score_zit = 0
@@ -144,7 +158,7 @@ if st.sidebar.button("Tüm Puanları Sıfırla 🔄"):
 
 # İlerleme Çubuğu
 progress_val = min(current_score, 100) 
-st.write(f"**{game_name} Hedefi: %{progress_val}**")
+st.write(f"**Hedef: %{progress_val}**")
 st.progress(progress_val / 100)
 
 # ========================================================
@@ -156,18 +170,17 @@ if current_score >= 100:
     st.snow()
     
     st.markdown(f"""
-    <div style="background-color: #FFD700; padding: 30px; border-radius: 20px; text-align: center; border: 5px solid orange;">
-        <h1 style='font-size: 80px;'>🏆</h1>
-        <h1 style='color: #d32f2f; font-size: 40px !important;'>TEBRİKLER ROZA!</h1>
-        <h2 style='color: #333 !important;'>{game_name} BÖLÜMÜNÜ BİTİRDİN! 🌟</h2>
-        <p style='font-size: 20px; color: black !important;'>Harikasın! Şimdi menüden başka bir oyuna geçebilirsin.</p>
+    <div style="background-color: #FFD700; padding: 20px; border-radius: 20px; text-align: center; border: 5px solid orange;">
+        <h1 style='font-size: 50px !important;'>🏆</h1>
+        <h1 style='color: #d32f2f !important; font-size: 30px !important;'>TEBRİKLER ROZA!</h1>
+        <h2 style='color: #333 !important; font-size: 20px !important;'>{game_name} BÖLÜMÜNÜ BİTİRDİN! 🌟</h2>
     </div>
     """, unsafe_allow_html=True)
     
     st.image("https://media.giphy.com/media/l4JySAWfMaY7w88sU/giphy.gif", use_container_width=True)
     
     st.write("")
-    if st.button(f"{game_name} Puanını Sıfırla ve Oyna 🔄"):
+    if st.button(f"{game_name} Tekrar Oyna 🔄"):
         st.session_state[score_key] = 0
         st.rerun()
     st.stop()
@@ -177,18 +190,16 @@ if current_score >= 100:
 # ========================================================
 if page == "🧮 Çarpım Canavarı":
     st.title("🧮 Çarpım Canavarı") 
-    st.markdown("<h3 style='text-align: center;'>Soruyu bil, çubuğu doldur! 🚀</h3>", unsafe_allow_html=True)
 
     n1 = st.session_state.math_q['n1']
     n2 = st.session_state.math_q['n2']
     correct_answer = n1 * n2
 
     st.markdown(f"""
-    <div style="background-color: white; padding: 15px; border-radius: 20px; border: 3px dashed #FF4B4B; text-align:center;">
-        <h1 style='color: #FF4B4B !important; font-size: 50px; margin:0;'>{n1} x {n2} = ?</h1>
+    <div style="background-color: white; padding: 10px; border-radius: 15px; border: 3px dashed #FF4B4B; text-align:center; margin-bottom: 10px;">
+        <h1 style='color: #FF4B4B !important; font-size: 40px !important; margin:0;'>{n1} x {n2} = ?</h1>
     </div>
     """, unsafe_allow_html=True)
-    st.write("")
 
     if 'math_options' not in st.session_state:
         opts = [correct_answer]
@@ -201,28 +212,26 @@ if page == "🧮 Çarpım Canavarı":
 
     user_ans = st.radio("", st.session_state.math_options, index=None, key="math_radio")
 
-    st.write("")
     if st.button("Kontrol Et ✅", key="btn_math"):
         if user_ans is None:
-            st.warning("Lütfen bir şık seç Roza! 👆")
+            st.warning("Seçim yapmalısın!")
         elif user_ans == correct_answer:
             ses_cal("dogru")
-            st.markdown("<h1 style='text-align: center; color: #28a745 !important; font-size: 35px;'>🌟 HARİKASIN KIZIM ROZA! 🌟</h1>", unsafe_allow_html=True)
+            st.markdown("<h2 style='color: #28a745 !important;'>🌟 AFERİN ROZA! 🌟</h2>", unsafe_allow_html=True)
             st.session_state.score_math += 10
-            time.sleep(1.5)
+            time.sleep(1.0)
             st.session_state.math_q = {'n1': random.randint(1, 10), 'n2': random.randint(1, 10)}
             if 'math_options' in st.session_state: del st.session_state.math_options
             st.rerun()
         else:
             ses_cal("yanlis")
-            st.markdown("<h1 style='text-align: center; color: #FF4B4B !important; font-size: 35px;'>🐢 Yapma Roza!! 🐢</h1>", unsafe_allow_html=True)
+            st.markdown("<h2 style='color: #FF4B4B !important;'>🐢 Yapma Roza!! 🐢</h2>", unsafe_allow_html=True)
 
 # ========================================================
 # 2. OYUN: İNGİLİZCE KARTLARI
 # ========================================================
 elif page == "🇬🇧 İngilizce Kartları":
     st.title("🇬🇧 İngilizce Kartları")
-    st.markdown("<h3 style='text-align: center;'>Kelimeleri öğren, kupayı kazan! 🏆</h3>", unsafe_allow_html=True)
 
     words = [
         {"eng": "Cat 🐱", "tr": "Kedi"}, {"eng": "Dog 🐶", "tr": "Köpek"},
@@ -247,102 +256,4 @@ elif page == "🇬🇧 İngilizce Kartları":
         random.shuffle(words)
     
     current_word = words[st.session_state.eng_index]
-    correct_tr = current_word['tr']
-
-    st.markdown(f"""
-    <div style="background-color: #E0F7FA; padding: 15px; border-radius: 20px; border: 3px solid #00BCD4; text-align:center;">
-        <h3 style='color: #006064 !important; margin:0;'>Bu kelime ne demek?</h3>
-        <h1 style='color: #0097A7 !important; font-size: 50px; margin-top:5px;'>{current_word['eng']}</h1>
-    </div>
-    """, unsafe_allow_html=True)
-    st.write("")
-
-    if 'eng_options' not in st.session_state:
-        opts = [correct_tr]
-        tum_turkce = [w['tr'] for w in words]
-        while len(opts) < 3:
-            yanlis = random.choice(tum_turkce)
-            if yanlis != correct_tr and yanlis not in opts:
-                opts.append(yanlis)
-        random.shuffle(opts)
-        st.session_state.eng_options = opts
-
-    cevap = st.radio("", st.session_state.eng_options, index=None, key="eng_radio")
-
-    st.write("")
-    if st.button("Cevabı Gönder 🚀", key="btn_eng"):
-        if cevap is None:
-            st.warning("Bir cevap seçmelisin! 👆")
-        elif cevap == correct_tr:
-            ses_cal("dogru")
-            st.markdown("<h1 style='text-align: center; color: #28a745 !important; font-size: 35px;'>🌟 HARİKASIN KIZIM ROZA! 🌟</h1>", unsafe_allow_html=True)
-            st.session_state.score_eng += 10
-            time.sleep(1.5)
-            st.session_state.eng_index += 1
-            if 'eng_options' in st.session_state: del st.session_state.eng_options
-            st.rerun()
-        else:
-            ses_cal("yanlis")
-            st.markdown("<h1 style='text-align: center; color: #FF4B4B !important; font-size: 35px;'>🐢 Yapma Roza!! 🐢</h1>", unsafe_allow_html=True)
-
-# ========================================================
-# 3. OYUN: ZIT ANLAMLAR
-# ========================================================
-elif page == "🌗 Zıt Anlamlar":
-    st.title("🌗 Zıt Anlamlar")
-    st.markdown("<h3 style='text-align: center;'>Tersini bul, hedefi 12'den vur! 🎯</h3>", unsafe_allow_html=True)
-
-    zit_words = {
-        "SİYAH ⚫": "BEYAZ", "UZUN 🦒": "KISA", "ZENGİN 💰": "FAKİR",
-        "ACI 🌶️": "TATLI", "BÜYÜK 🐘": "KÜÇÜK", "AĞIR 🏋️": "HAFİF",
-        "GECE 🌑": "GÜNDÜZ", "SICAK 🔥": "SOĞUK", "YAVAŞ 🐢": "HIZLI",
-        "GÜZEL 🌸": "ÇİRKİN", "VAR ✅": "YOK", "AÇIK 🔓": "KAPALI",
-        "TEMİZ ✨": "KİRLİ", "GENÇ 👶": "YAŞLI", "DOLU 🥛": "BOŞ",
-        "İNCE 🧵": "KALIN", "ÖN ⏩": "ARKA", "İÇERİ 🏠": "DIŞARI",
-        "YENİ ✨": "ESKİ", "SERT 🪨": "YUMUŞAK", "KOLAY 👍": "ZOR",
-        "SABAH ☀️": "AKŞAM", "YAZ 🏖️": "KIŞ", "DOĞRU ✅": "YANLIŞ",
-        "İYİ 😇": "KÖTÜ", "ISLAK 💧": "KURU", "YUKARI ⬆️": "AŞAĞI",
-        "SAĞ ➡️": "SOL", "GÜLMEK 😂": "AĞLAMAK"
-    }
-
-    if st.session_state.zit_soru == "" or st.session_state.zit_soru not in zit_words:
-        st.session_state.zit_soru = random.choice(list(zit_words.keys()))
-
-    soru = st.session_state.zit_soru
-    dogru_cevap = zit_words[soru]
-
-    st.markdown(f"""
-    <div style="background-color: #F3E5F5; padding: 15px; border-radius: 20px; border: 3px solid #9C27B0; text-align:center;">
-        <h3 style='color: #6A1B9A !important; margin:0;'>Bu kelimenin zıttı nedir?</h3>
-        <h1 style='color: #8E24AA !important; font-size: 50px; margin-top:5px;'>{soru}</h1>
-    </div>
-    """, unsafe_allow_html=True)
-    st.write("")
-
-    if 'zit_options' not in st.session_state:
-        opts = [dogru_cevap]
-        tum_cevaplar = list(zit_words.values())
-        while len(opts) < 3:
-            yanlis = random.choice(tum_cevaplar)
-            if yanlis != dogru_cevap and yanlis not in opts:
-                opts.append(yanlis)
-        random.shuffle(opts)
-        st.session_state.zit_options = opts
-
-    cevap_zit = st.radio("", st.session_state.zit_options, index=None, key="zit_radio")
-
-    st.write("")
-    if st.button("Kontrol Et 🎯", key="btn_zit"):
-        if cevap_zit is None:
-            st.warning("Lütfen bir şık işaretle! 👆")
-        elif cevap_zit == dogru_cevap:
-            ses_cal("dogru")
-            st.markdown("<h1 style='text-align: center; color: #28a745 !important; font-size: 35px;'>🌟 HARİKASIN KIZIM ROZA! 🌟</h1>", unsafe_allow_html=True)
-            st.session_state.score_zit += 10
-            time.sleep(1.5)
-            st.session_state.zit_soru = random.choice(list(zit_words.keys()))
-            if 'zit_options' in st.session_state: del st.session_state.zit_options
-            st.rerun()
-        else:
-            ses_cal("yanlis")
-            st.markdown("<h1 style='text-align: center; color: #FF4B4B !important; font-size: 35px;'>🐢 Yapma Roza!! 🐢</h1>", unsafe_allow_html=True)
+    correct_
