@@ -59,6 +59,6 @@ def css_yukle():
             padding-top: 2rem !important;
             padding-bottom: 5rem !important;
         }
-        #MainMenu, footer, header {visibility: hidden;}
+        #MainMenu, footer, {visibility: hidden;}
         </style>
     """, unsafe_allow_html=True)
