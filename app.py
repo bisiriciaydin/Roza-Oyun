@@ -9,20 +9,35 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 🎨 ÖZEL TASARIM (CSS - DÜZELTİLMİŞ) ---
+# --- 🎨 ÖZEL TASARIM (TELEFON İÇİN GÜÇLENDİRİLMİŞ CSS) ---
 st.markdown("""
     <style>
-    /* Arka plan renk geçişi */
+    /* Arka plan */
     .stApp {
         background-image: linear-gradient(to top, #dfe9f3 0%, white 100%);
     }
     
-    /* Yan menü tasarımı */
+    /* Yan menü */
     [data-testid="stSidebar"] {
         background-color: #fff0f5;
         border-right: 5px solid #ff69b4;
     }
     
+    /* BAŞLIKLARI ZORLA RENKLİ YAP (Görünmeme sorununu çözer) */
+    h1 {
+        color: #C71585 !important;
+        text-align: center;
+        font-family: 'Comic Sans MS', cursive;
+        text-shadow: 2px 2px white;
+    }
+    h2, h3 {
+        color: #6A1B9A !important;
+        text-align: center;
+    }
+    p {
+        color: #333333 !important;
+    }
+
     /* İlerleme çubuğu */
     .stProgress > div > div > div > div {
         background-color: #00CC66;
@@ -42,42 +57,30 @@ st.markdown("""
         transition: 0.3s;
         width: 100%;
     }
-    .stButton>button:hover {
-        background-color: #FF1493;
-        transform: scale(1.02);
-    }
     
-    /* --- RADYO BUTONLARI (TELEFON İÇİN DÜZELTME BURADA) --- */
+    /* --- RADYO BUTONLARI (TELEFON İÇİN DÜZELTME) --- */
     /* Kutunun kendisi */
     .stRadio div[role='radiogroup'] > label {
-        background-color: rgba(255,255,255,0.9) !important;
+        background-color: rgba(255,255,255,0.95) !important; /* Arka planı daha opak yaptık */
         padding: 15px !important;
         border-radius: 15px !important;
         margin-bottom: 10px !important;
         border: 2px solid #ddd !important;
         display: block !important;
         cursor: pointer !important;
-        transition: all 0.3s !important;
     }
     
-    /* Kutunun içindeki YAZI RENGİNİ ZORLA MOR YAP */
+    /* Şıkların yazı rengini ZORLA KOYU YAP */
     .stRadio div[role='radiogroup'] label p {
         font-size: 24px !important;
         font-weight: bold !important;
-        color: #4B0082 !important; /* İşte sihirli dokunuş burası */
+        color: #4B0082 !important;
     }
     
     /* Seçilen şıkkın kenarını renklendir */
     .stRadio div[role='radiogroup'] > label:hover {
         background-color: #e6e6fa !important;
         border-color: #9370db !important;
-    }
-
-    /* Başlıklar */
-    h1 {
-        text-align: center;
-        font-family: 'Comic Sans MS', cursive;
-        color: #C71585;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -155,9 +158,9 @@ if current_score >= 100:
     st.markdown(f"""
     <div style="background-color: #FFD700; padding: 30px; border-radius: 20px; text-align: center; border: 5px solid orange;">
         <h1 style='font-size: 80px;'>🏆</h1>
-        <h1 style='color: #d32f2f; font-size: 40px;'>TEBRİKLER ROZA!</h1>
-        <h2 style='color: #333;'>{game_name} BÖLÜMÜNÜ BİTİRDİN! 🌟</h2>
-        <p style='font-size: 20px;'>Harikasın! Şimdi menüden başka bir oyuna geçebilirsin.</p>
+        <h1 style='color: #d32f2f; font-size: 40px !important;'>TEBRİKLER ROZA!</h1>
+        <h2 style='color: #333 !important;'>{game_name} BÖLÜMÜNÜ BİTİRDİN! 🌟</h2>
+        <p style='font-size: 20px; color: black !important;'>Harikasın! Şimdi menüden başka bir oyuna geçebilirsin.</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -182,7 +185,7 @@ if page == "🧮 Çarpım Canavarı":
 
     st.markdown(f"""
     <div style="background-color: white; padding: 15px; border-radius: 20px; border: 3px dashed #FF4B4B; text-align:center;">
-        <h1 style='color: #FF4B4B; font-size: 50px; margin:0;'>{n1} x {n2} = ?</h1>
+        <h1 style='color: #FF4B4B !important; font-size: 50px; margin:0;'>{n1} x {n2} = ?</h1>
     </div>
     """, unsafe_allow_html=True)
     st.write("")
@@ -204,7 +207,7 @@ if page == "🧮 Çarpım Canavarı":
             st.warning("Lütfen bir şık seç Roza! 👆")
         elif user_ans == correct_answer:
             ses_cal("dogru")
-            st.markdown("<h1 style='text-align: center; color: #28a745; font-size: 35px;'>🌟 HARİKASIN KIZIM ROZA! 🌟</h1>", unsafe_allow_html=True)
+            st.markdown("<h1 style='text-align: center; color: #28a745 !important; font-size: 35px;'>🌟 HARİKASIN KIZIM ROZA! 🌟</h1>", unsafe_allow_html=True)
             st.session_state.score_math += 10
             time.sleep(1.5)
             st.session_state.math_q = {'n1': random.randint(1, 10), 'n2': random.randint(1, 10)}
@@ -212,7 +215,7 @@ if page == "🧮 Çarpım Canavarı":
             st.rerun()
         else:
             ses_cal("yanlis")
-            st.markdown("<h1 style='text-align: center; color: #FF4B4B; font-size: 35px;'>🐢 Yapma Roza!! 🐢</h1>", unsafe_allow_html=True)
+            st.markdown("<h1 style='text-align: center; color: #FF4B4B !important; font-size: 35px;'>🐢 Yapma Roza!! 🐢</h1>", unsafe_allow_html=True)
 
 # ========================================================
 # 2. OYUN: İNGİLİZCE KARTLARI
@@ -248,8 +251,8 @@ elif page == "🇬🇧 İngilizce Kartları":
 
     st.markdown(f"""
     <div style="background-color: #E0F7FA; padding: 15px; border-radius: 20px; border: 3px solid #00BCD4; text-align:center;">
-        <h3 style='color: #006064; margin:0;'>Bu kelime ne demek?</h3>
-        <h1 style='color: #0097A7; font-size: 50px; margin-top:5px;'>{current_word['eng']}</h1>
+        <h3 style='color: #006064 !important; margin:0;'>Bu kelime ne demek?</h3>
+        <h1 style='color: #0097A7 !important; font-size: 50px; margin-top:5px;'>{current_word['eng']}</h1>
     </div>
     """, unsafe_allow_html=True)
     st.write("")
@@ -272,7 +275,7 @@ elif page == "🇬🇧 İngilizce Kartları":
             st.warning("Bir cevap seçmelisin! 👆")
         elif cevap == correct_tr:
             ses_cal("dogru")
-            st.markdown("<h1 style='text-align: center; color: #28a745; font-size: 35px;'>🌟 HARİKASIN KIZIM ROZA! 🌟</h1>", unsafe_allow_html=True)
+            st.markdown("<h1 style='text-align: center; color: #28a745 !important; font-size: 35px;'>🌟 HARİKASIN KIZIM ROZA! 🌟</h1>", unsafe_allow_html=True)
             st.session_state.score_eng += 10
             time.sleep(1.5)
             st.session_state.eng_index += 1
@@ -280,7 +283,7 @@ elif page == "🇬🇧 İngilizce Kartları":
             st.rerun()
         else:
             ses_cal("yanlis")
-            st.markdown("<h1 style='text-align: center; color: #FF4B4B; font-size: 35px;'>🐢 Yapma Roza!! 🐢</h1>", unsafe_allow_html=True)
+            st.markdown("<h1 style='text-align: center; color: #FF4B4B !important; font-size: 35px;'>🐢 Yapma Roza!! 🐢</h1>", unsafe_allow_html=True)
 
 # ========================================================
 # 3. OYUN: ZIT ANLAMLAR
@@ -310,8 +313,8 @@ elif page == "🌗 Zıt Anlamlar":
 
     st.markdown(f"""
     <div style="background-color: #F3E5F5; padding: 15px; border-radius: 20px; border: 3px solid #9C27B0; text-align:center;">
-        <h3 style='color: #6A1B9A; margin:0;'>Bu kelimenin zıttı nedir?</h3>
-        <h1 style='color: #8E24AA; font-size: 50px; margin-top:5px;'>{soru}</h1>
+        <h3 style='color: #6A1B9A !important; margin:0;'>Bu kelimenin zıttı nedir?</h3>
+        <h1 style='color: #8E24AA !important; font-size: 50px; margin-top:5px;'>{soru}</h1>
     </div>
     """, unsafe_allow_html=True)
     st.write("")
@@ -334,7 +337,7 @@ elif page == "🌗 Zıt Anlamlar":
             st.warning("Lütfen bir şık işaretle! 👆")
         elif cevap_zit == dogru_cevap:
             ses_cal("dogru")
-            st.markdown("<h1 style='text-align: center; color: #28a745; font-size: 35px;'>🌟 HARİKASIN KIZIM ROZA! 🌟</h1>", unsafe_allow_html=True)
+            st.markdown("<h1 style='text-align: center; color: #28a745 !important; font-size: 35px;'>🌟 HARİKASIN KIZIM ROZA! 🌟</h1>", unsafe_allow_html=True)
             st.session_state.score_zit += 10
             time.sleep(1.5)
             st.session_state.zit_soru = random.choice(list(zit_words.keys()))
@@ -342,4 +345,4 @@ elif page == "🌗 Zıt Anlamlar":
             st.rerun()
         else:
             ses_cal("yanlis")
-            st.markdown("<h1 style='text-align: center; color: #FF4B4B; font-size: 35px;'>🐢 Yapma Roza!! 🐢</h1>", unsafe_allow_html=True)
+            st.markdown("<h1 style='text-align: center; color: #FF4B4B !important; font-size: 35px;'>🐢 Yapma Roza!! 🐢</h1>", unsafe_allow_html=True)
